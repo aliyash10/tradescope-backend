@@ -21,7 +21,12 @@ app = FastAPI(
 # ── CORS: allow your frontend to call this API ──
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],          # In production, replace with your frontend URL
+    allow_origins=[
+        "https://keen-hamster-2193ed.netlify.app",   # your live Netlify site
+        "http://localhost:5500",                      # local dev
+        "http://localhost:3000",                      # local dev alt
+        "null",                                       # file:// opened locally
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -35,6 +40,16 @@ app.include_router(zerodha_router, prefix="/api")
 
 @app.get("/")
 def root():
+    return {"status": "ok", "message": "TradeScope API is running"}
+
+
+@app.get("/api/health")
+def health():
+    return {"status": "healthy"}
+
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)def root():
     return {"status": "ok", "message": "TradeScope API is running"}
 
 
